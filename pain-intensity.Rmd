@@ -1,0 +1,202 @@
+---
+output: 
+    md_document:
+        variant: markdown_github
+---
+
+## Risk factors associated with having greater pain in patients with painful HIV-SN
+
+### Authors
+Peter Kamerman, Antonia Wadley, Prinisha Pillay
+
+**Date: `r format(Sys.time(), "%B %d, %Y")`**
+
+***
+
+## Session setup
+```{r sessionSetup, include = FALSE}
+# Load packages
+library(ggplot2)
+library(scales)
+library(grid)
+library(svglite)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(MASS) # Ordinal logistic regression (output can be used by MuMIn)
+library(MuMIn) # Model subset selection
+    options(na.action = na.fail) # Setting for MuMIn (requires complete dataset)
+library(rms) # Same as MASS::polr, but better model fit indicators
+library(regr0) # For diagnostic plots of ordinal logistic regression
+    
+# Load palette
+palette_dark <- c('#2a7eac', '#ac582a')
+palette_light <- c('#61add8', '#d88c61')
+
+# set seed
+set.seed(1234)
+
+# knitr chunk options
+opts_chunk$set(echo = TRUE,
+               warning = FALSE,
+               message = FALSE,
+               cache = FALSE,
+               cache.extra = rand_seed,
+               fig.path = './figures/',
+               fig.width = 10,
+               fig.height = 10,
+               dev = c('png', 'svglite'),
+               tidy = FALSE)
+```
+
+## Load data
+```{r import_data}
+data <- read_csv('./data/pain-intensity.csv')
+```
+
+## Quick look
+```{r quick_look}
+dim(data)
+names(data)
+head(data)
+tail(data)
+glimpse(data)
+summary(data)
+```
+
+## Process data
+```{r process_data}
+data <- data %>%
+    mutate(tb = factor(tb)) %>% # Convert 'tb' to a factor
+    filter(complete.cases(.)) # Retain complete cases only
+```
+
+## Build model
+### Linear regression
+```{r linear_regression}
+# Linear regression on full model
+## pain_intensity treated as a continuous measure
+## predictors included all variables with p<0.1 on univariate
+## analysis: pain_sites, hscl_depression_score, hscl_anxiety_score, 
+## pcs, tb
+
+# Create working dataset
+data.lm <- data
+
+# Model
+mod.lm<-lm(pain_intensity ~ pain_sites + 
+               hscl_depression_score +
+               hscl_anxiety_score +
+               pcs +
+               tb, 
+           data = data.lm)
+
+# Model summary
+summary(mod.lm) 
+## OUTCOME: Significant positive relationship between pain intensity 
+## and number of pain sites
+
+# Diagnostic plots to check whether linear model is valid
+par(mfrow=c(2,2))
+plot(mod.lm)
+par(mfrow=c(1,1))
+# OUTCOME: Poor fit based on QQ plot, and some 'shape' to residual plot
+## OUTCOME: Reject linear model
+```
+
+### Ordinal logistic regression
+```{r ordinal_logistic}
+# Ordinal logistic regression on full model (all variables p<0.1 on univariate analysis, 
+# number of pain sites, mean depression score, mean anxiety score, PCS score, and 
+# whether currently on treatment for TB)
+
+# Pain intensity as an ordinal measure ("data" data.frame)
+
+# Select best model using Akaike's information criterion (AIC)
+
+# Create working dataset
+data.olr <- data %>%
+    mutate(pain_intensity = factor(pain_intensity, ordered = TRUE)) # Convert 'pain_intensity' to an ordered factor
+
+# Model
+## Use MASS::polr for this step because output is compatible with MuMIn
+mod.olr <- polr(pain_intensity ~ pain_sites + 
+               hscl_depression_score +
+               hscl_anxiety_score +
+               pcs +
+               tb, 
+           data = data.olr,
+           Hess=T)
+# Model summary 
+summary(mod.olr)
+
+# Use "dredge" to select best models based on AIC
+dredge.olr <- dredge(mod.olr, beta = FALSE, evaluate = TRUE, rank = "AIC")
+
+# Build a model selection table
+mod.olr.sel <- model.sel(dredge.olr)
+
+# Subset those models that show an change in AIC 
+# of 2 or less (not different from each other)
+get.mod.olr <- get.models(mod.olr.sel, subset = delta < 2)
+get.mod.olr
+
+# Average across the subsetted models
+mod.avg.olr <- model.avg(get.mod.olr)
+summary(mod.avg.olr)
+# Made a priori choice to only take variables that occur in >50% of models
+# OUTCOME: hscl_depression_score and pain_sites occur in all 5 models
+# OUTCOME: Current treatment for tb found in 3/5 models
+# OUTCOME: Take 'hscl_depression_score, pain_sites, tb through to 
+# next stage of analysis
+
+# New model
+## Use rms::lrm for this stage because better fit 
+## indicators than MASS::polr
+attach(data.olr)
+d <- datadist(hscl_depression_score, 
+              pain_sites, 
+              tb)
+detach(data.olr)
+options(datadist = "d")
+mod.olr.new<-lrm(pain_intensity ~ hscl_depression_score +
+                     pain_sites + 
+                     tb, 
+              data = data.olr, 
+              x = TRUE, y = TRUE, 
+              linear.predictors = TRUE)
+
+# Model summary
+mod.olr.new
+summary(mod.olr.new)
+# Plot outcome with anova results
+plot(Predict(mod.olr.new), 
+     anova = anova(mod.olr.new),
+     pval = TRUE)
+
+# OUTCOME: Model is significantly better than null model (p = 0.007), 
+# OUTCOME: Poor predictive value: Nagelkerke R^2 = 0.09, C (AUROC) = 0.63
+# OUTCOME: hscl_depression_score, pain_sites, and tb were all 
+# independent risk factors
+# OUTCOME: Increasing depression score => increased pain intensity
+# OUTCOME: Increasing number of pain sites  => increased pain intenisty. 
+# OUTCOME: Being treated for TB => reduced pain intensity
+
+# Validate measures of fit using bootstrap sampling (B=999)
+validate(mod.olr.new, 
+         method = "boot", 
+         B=999, 
+         group = data.olr$pain_intensity)
+# OUTCOME: see "index.corrected" for bootstrapped measures
+
+# Test for multicolinearity using variance inflation factor (vif)
+vif(mod.olr.new) # >4 is a problem
+# OUTCOME: No evidence of multicolinearity between predictors
+
+```
+
+## Session information
+```{r session_information}
+sessionInfo()
+```
