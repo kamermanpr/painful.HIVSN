@@ -28,7 +28,6 @@ library(MASS) # Ordinal logistic regression (output can be used by MuMIn)
 library(MuMIn) # Model subset selection
     options(na.action = na.fail) # Setting for MuMIn (requires complete dataset)
 library(rms) # Same as MASS::polr, but better model fit indicators
-library(regr0) # For diagnostic plots of ordinal logistic regression
     
 # Load palette
 palette_dark <- c('#2a7eac', '#ac582a')
@@ -68,56 +67,19 @@ summary(data)
 ## Process data
 ```{r process_data}
 data <- data %>%
-    mutate(tb = factor(tb)) %>% # Convert 'tb' to a factor
+    mutate(pain_intensity = factor(pain_intensity, ordered = TRUE), # Convert 'pain_intensity' to an ordered factor
+           tb = factor(tb)) %>% # Convert 'tb' to a factor
     filter(complete.cases(.)) # Retain complete cases only
 ```
 
 ## Build model
-### Linear regression
-```{r linear_regression}
-# Linear regression on full model
-## pain_intensity treated as a continuous measure
-## predictors included all variables with p<0.1 on univariate
-## analysis: pain_sites, hscl_depression_score, hscl_anxiety_score, 
-## pcs, tb
-
-# Create working dataset
-data.lm <- data
-
-# Model
-mod.lm<-lm(pain_intensity ~ pain_sites + 
-               hscl_depression_score +
-               hscl_anxiety_score +
-               pcs +
-               tb, 
-           data = data.lm)
-
-# Model summary
-summary(mod.lm) 
-## OUTCOME: Significant positive relationship between pain intensity 
-## and number of pain sites
-
-# Diagnostic plots to check whether linear model is valid
-par(mfrow=c(2,2))
-plot(mod.lm)
-par(mfrow=c(1,1))
-# OUTCOME: Poor fit based on QQ plot, and some 'shape' to residual plot
-## OUTCOME: Reject linear model
-```
-
 ### Ordinal logistic regression
 ```{r ordinal_logistic}
 # Ordinal logistic regression on full model (all variables p<0.1 on univariate analysis, 
 # number of pain sites, mean depression score, mean anxiety score, PCS score, and 
-# whether currently on treatment for TB)
-
-# Pain intensity as an ordinal measure ("data" data.frame)
-
-# Select best model using Akaike's information criterion (AIC)
-
-# Create working dataset
-data.olr <- data %>%
-    mutate(pain_intensity = factor(pain_intensity, ordered = TRUE)) # Convert 'pain_intensity' to an ordered factor
+# whether currently on treatment for TB).
+# Pain intensity as an ordinal measure ("data" data.frame).
+# Select best model using Akaike's information criterion (AIC).
 
 # Model
 ## Use MASS::polr for this step because output is compatible with MuMIn
