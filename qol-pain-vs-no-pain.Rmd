@@ -1,0 +1,129 @@
+---
+output: github_document
+---
+
+## Factors associated with having reduced quality of life in patients with HIV-SN
+_(painful or non-painful HIV-SN)_
+
+### Authors
+Peter Kamerman, Antonia Wadley, Prinisha Pillay
+
+**Date: `r format(Sys.time(), "%B %d, %Y")`**
+
+***
+
+## Session setup
+```{r sessionSetup, include = FALSE}
+# Load packages
+library(knitr)
+library(svglite)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(gamlss)
+
+# set seed
+set.seed(1234)
+
+# knitr chunk options
+opts_chunk$set(echo = TRUE,
+               warning = FALSE,
+               message = FALSE,
+               cache = FALSE,
+               cache.extra = rand_seed,
+               fig.path = './figures/qol-pain-no-pain/',
+               fig.width = 10,
+               fig.height = 10,
+               dev = c('png', 'svglite'),
+               tidy = FALSE)
+```
+
+## Load data
+```{r import_data}
+data <- read_csv('./data/qol-pain-vs-no-pain.csv')
+```
+
+## Quick look
+```{r quick_look}
+dim(data)
+names(data)
+head(data)
+tail(data)
+glimpse(data)
+summary(data)
+```
+
+## Process data
+```{r process_data}
+data.gam <- data %>%
+    mutate(eq5d_vas = eq5d_vas/100, # Convert to a proportion
+           painful_sn = factor(painful_sn), # Convert to a factor
+           other_pain_sites = factor(other_pain_sites), # Convert to a factor
+           sex = factor(sex)) %>% # Convert to a factor
+    filter(complete.cases(.)) # Retain complete cases only
+
+# Check dimensions after removing incomplete cases
+dim(data.gam)
+```
+
+## Build model
+### Generalized Additive Model 
+_(with extended beta inflated distribution)_
+```{r gam}
+# GAM on full model (all variables p<0.1 on univariate analysis: age, painful_sn, 
+# other_pain_sites, sex, education, depression, anxiety).
+# Use beta-inflated distribution [0, 1] for VAS data
+# Select best model using generalized Akaike's information criterion (AIC).
+
+# Model
+mod.gam <- gamlss(eq5d_vas ~ 
+                      painful_sn +
+                      other_pain_sites +
+                      age +
+                      sex +
+                      hscl_depression_score +
+                      hscl_anxiety_score +
+                      education, 
+           data = data.gam,
+           family = BEINF())
+
+# Model summary 
+summary(mod.gam)
+
+# Use stepGAIC to select best models based on GAIC
+step.gam <- stepGAIC(mod.gam)
+step.gam$anova
+summary(step.gam)
+# OUTCOME: Final model retains hscl_depression_score
+
+# Fit reduced model
+mod.gam.new <- gamlss(eq5d_vas ~ 
+                          painful_sn +
+                          hscl_depression_score,
+           data = data.gam,
+           family = BEINF())
+# Diagnostic plots
+plot(mod.gam.new)
+# OUTCOME: No pattern in residual vs fitted plot, 
+# and residuals normally distributed
+
+# Plot
+library(ggplot2)
+## hscl_depression_score
+ggplot(data.gam, 
+       aes(x = hscl_depression_score, y = eq5d_vas)) +
+    geom_smooth()
+## OUTCOME: As depression score increases, QoL decreases.
+
+## painful_sn
+ggplot(data.gam, 
+       aes(x = painful_sn, y = eq5d_vas)) +
+    geom_boxplot()
+## OUTCOME: Presence of painful SN associated with 
+## reduced QoL.
+```
+
+## Session information
+```{r session_information}
+sessionInfo()
+```

@@ -1,10 +1,8 @@
 ---
-output: 
-    md_document:
-        variant: markdown_github
+output: github_document
 ---
 
-## Risk factors associated with having greater pain in patients with painful HIV-SN
+## Factors associated with having greater pain in patients with painful HIV-SN
 
 ### Authors
 Peter Kamerman, Antonia Wadley, Prinisha Pillay
@@ -16,22 +14,15 @@ Peter Kamerman, Antonia Wadley, Prinisha Pillay
 ## Session setup
 ```{r sessionSetup, include = FALSE}
 # Load packages
-library(ggplot2)
-library(scales)
-library(grid)
+library(knitr)
 library(svglite)
 library(readr)
 library(dplyr)
 library(tidyr)
-library(knitr)
 library(MASS) # Ordinal logistic regression (output can be used by MuMIn)
 library(MuMIn) # Model subset selection
     options(na.action = na.fail) # Setting for MuMIn (requires complete dataset)
 library(rms) # Same as MASS::polr, but better model fit indicators
-    
-# Load palette
-palette_dark <- c('#2a7eac', '#ac582a')
-palette_light <- c('#61add8', '#d88c61')
 
 # set seed
 set.seed(1234)
@@ -42,7 +33,7 @@ opts_chunk$set(echo = TRUE,
                message = FALSE,
                cache = FALSE,
                cache.extra = rand_seed,
-               fig.path = './figures/',
+               fig.path = './figures/pain-intensity/',
                fig.width = 10,
                fig.height = 10,
                dev = c('png', 'svglite'),
@@ -66,7 +57,7 @@ summary(data)
 
 ## Process data
 ```{r process_data}
-data <- data %>%
+data.olr <- data %>%
     mutate(pain_intensity = factor(pain_intensity, ordered = TRUE), # Convert 'pain_intensity' to an ordered factor
            tb = factor(tb)) %>% # Convert 'tb' to a factor
     filter(complete.cases(.)) # Retain complete cases only
@@ -155,7 +146,6 @@ validate(mod.olr.new,
 # Test for multicolinearity using variance inflation factor (vif)
 vif(mod.olr.new) # >4 is a problem
 # OUTCOME: No evidence of multicolinearity between predictors
-
 ```
 
 ## Session information

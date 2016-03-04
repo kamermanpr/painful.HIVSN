@@ -1,0 +1,156 @@
+---
+output: github_document
+---
+
+## Factors associated with having pain in patients with HIV-SN
+
+### Authors
+Peter Kamerman, Antonia Wadley, Prinisha Pillay
+
+**Date: `r format(Sys.time(), "%B %d, %Y")`**
+
+***
+
+## Session setup
+```{r sessionSetup, include = FALSE}
+# Load packages
+library(knitr)
+library(svglite)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(MASS) # Ordinal logistic regression (output can be used by MuMIn)
+library(MuMIn) # Model subset selection
+    options(na.action = na.fail) # Setting for MuMIn (requires complete dataset)
+library(rms) # Same as MASS::polr, but better model fit indicators
+
+# set seed
+set.seed(1234)
+
+# knitr chunk options
+opts_chunk$set(echo = TRUE,
+               warning = FALSE,
+               message = FALSE,
+               cache = FALSE,
+               cache.extra = rand_seed,
+               fig.path = './figures/pain-vs-no-pain/',
+               fig.width = 10,
+               fig.height = 10,
+               dev = c('png', 'svglite'),
+               tidy = FALSE)
+```
+
+## Load data
+```{r import_data}
+data.lr <- read_csv('./data/pain-vs-no-pain.csv')
+```
+
+## Quick look
+```{r quick_look}
+dim(data.lr)
+names(data.lr)
+head(data.lr)
+tail(data.lr)
+glimpse(data.lr)
+summary(data.lr)
+```
+
+## Process data
+```{r process_data}
+data.lr <- data.lr[ , -c(4, 9)] # remove 'sex' and 'age' (p > 0.1 on univariate)
+data.lr <- data.lr %>%
+    mutate(painful_sn = factor(painful_sn), # Convert 'painful_sn' to a factor
+           vitB12 = factor(vitB12), # Convert 'vitB12' to a factor
+           other_pain_sites = factor(other_pain_sites)) %>% # Convert 'other_pain_sites' to a factor
+    filter(complete.cases(.)) # Retain complete cases only
+
+# Check dimensions after removing incomplete cases
+dim(data.lr)
+```
+
+## Build model
+### Ordinal logistic regression
+```{r logistic}
+# Logistic regression on full model (all variables p<0.1 on univariate analysis,
+# time since HIV diagnosis, current CD4 T-cell count, presence of other pain sites, 
+# vitamin B12 deficiency, mass, and height).
+# Model to include interaction between time since HIV diagnosis 
+# and current CD4 T-cell count.
+# Select best model using Akaike's information criterion (AIC)
+
+# Model
+## Use MASS::polr for this step because output is compatible with MuMIn
+mod.full <- glm(painful_sn ~
+                    time_since_diag * current_cd4 +
+                    other_pain_sites +
+                    vitB12 +
+                    mass +
+                    height,
+                data = data.lr, 
+                family="binomial")
+# Model summary 
+summary(mod.full)
+
+# Use "dredge" to select best models based on AIC
+dredge.lr <- dredge(mod.full, beta = FALSE, evaluate = TRUE, rank = "AIC")
+
+# Build a model selection table
+mod.lr.sel <- model.sel(dredge.lr)
+
+# Subset those models that show an change in AIC 
+# of 2 or less (not different from each other)
+get.mod.lr <- get.models(mod.lr.sel, subset = delta < 2)
+get.mod.lr
+
+# Average across the subsetted models
+mod.avg.lr <- model.avg(get.mod.lr)
+summary(mod.avg.lr)
+# Made a priori choice to only take variables that occur in >50% of models
+# OUTCOME: 'time_since_diag' and 'other_pain_sites' occur in all 6 models
+# OUTCOME: 'time_since_diag' and 'other_pain_sites' through to 
+# next stage of analysis.
+
+# New model
+## Use rms::lrm for this stage because better fit 
+## indicators than MASS::polr
+attach(data.lr)
+d <- datadist(other_pain_sites, 
+              time_since_diag)
+detach(data.lr)
+options(datadist = "d")
+mod.lr.new<-lrm(painful_sn ~
+                    other_pain_sites + 
+                    time_since_diag, 
+              data = data.lr, 
+              x = TRUE, y = TRUE, 
+              linear.predictors = TRUE)
+
+# Model summary
+mod.lr.new
+summary(mod.lr.new)
+# Plot outcome with anova results
+plot(Predict(mod.lr.new), 
+     anova = anova(mod.lr.new),
+     pval = TRUE)
+
+# OUTCOME: Model is significantly better than null model (p < 0.0001), 
+# OUTCOME: Good: Nagelkerke R^2 = 0.76, C (AUROC) = 0.93
+# OUTCOME: Only 'time_since_diag' was a significant, independent risk factor
+# OUTCOME: Reduced risk of pain as time since diagnosis increased.
+
+# Validate measures of fit using bootstrap sampling (B=999)
+validate(mod.lr.new, 
+         method = "boot", 
+         B=999, 
+         group = data.lr$pain_intensity)
+# OUTCOME: see "index.corrected" for bootstrapped measures
+
+# Test for multicolinearity using variance inflation factor (vif)
+vif(mod.lr.new) # >4 is a problem
+# OUTCOME: No evidence of multicolinearity between predictors
+```
+
+## Session information
+```{r session_information}
+sessionInfo()
+```
