@@ -69,7 +69,7 @@ dim(data.lr)
 ```
 
 ## Build model
-### Ordinal logistic regression
+### Logistic regression
 ```{r logistic}
 # Logistic regression on full model (all variables p<0.1 on univariate analysis,
 # time since HIV diagnosis, current CD4 T-cell count, presence of other pain sites, 
