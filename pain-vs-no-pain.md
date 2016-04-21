@@ -6,7 +6,7 @@ Factors associated with having pain in patients with HIV-SN
 
 Peter Kamerman, Antonia Wadley, Prinisha Pillay
 
-**Date: March 04, 2016**
+**Date: March 10, 2016**
 
 ------------------------------------------------------------------------
 
@@ -134,7 +134,7 @@ dim(data.lr)
 Build model
 -----------
 
-### Ordinal logistic regression
+### Logistic regression
 
 ``` r
 # Logistic regression on full model (all variables p<0.1 on univariate analysis,
@@ -290,7 +290,7 @@ get.mod.lr
     ## attr(,"rank")
     ## function (x) 
     ## do.call("rank", list(x))
-    ## <environment: 0x7fddab07c2a0>
+    ## <environment: 0x7f84e18d9aa0>
     ## attr(,"rank")attr(,"call")
     ## AIC(x)
     ## attr(,"rank")attr(,"class")
