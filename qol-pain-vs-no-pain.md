@@ -8,7 +8,7 @@ Factors associated with having reduced quality of life in patients with HIV-SN
 
 Peter Kamerman, Antonia Wadley, Prinisha Pillay
 
-**Date: March 04, 2016**
+**Date: November 19, 2016**
 
 ------------------------------------------------------------------------
 
@@ -43,33 +43,33 @@ names(data)
 head(data)
 ```
 
-    ## Source: local data frame [6 x 8]
-    ## 
+    ## # A tibble: 6 × 8
     ##   eq5d_vas   age painful_sn other_pain_sites    sex education
-    ##      (int) (int)      (chr)            (chr)  (chr)     (int)
+    ##      <int> <int>      <chr>            <chr>  <chr>     <int>
     ## 1       80    44        yes              yes female         5
     ## 2       50    46        yes              yes   male         6
     ## 3       70    67        yes              yes female         4
     ## 4       30    47        yes              yes female         6
     ## 5       60    61        yes              yes   male         5
     ## 6       80    48        yes              yes   male         6
-    ## Variables not shown: hscl_anxiety_score (dbl), hscl_depression_score (dbl)
+    ## # ... with 2 more variables: hscl_anxiety_score <dbl>,
+    ## #   hscl_depression_score <dbl>
 
 ``` r
 tail(data)
 ```
 
-    ## Source: local data frame [6 x 8]
-    ## 
+    ## # A tibble: 6 × 8
     ##   eq5d_vas   age painful_sn other_pain_sites    sex education
-    ##      (int) (int)      (chr)            (chr)  (chr)     (int)
+    ##      <int> <int>      <chr>            <chr>  <chr>     <int>
     ## 1      100    56         no              yes   male         5
     ## 2      100    37         no               no female         6
     ## 3       60    45         no               no female         6
     ## 4      100    40         no               no female         8
     ## 5      100    55         no               no female         5
     ## 6      100    34         no               no female         7
-    ## Variables not shown: hscl_anxiety_score (dbl), hscl_depression_score (dbl)
+    ## # ... with 2 more variables: hscl_anxiety_score <dbl>,
+    ## #   hscl_depression_score <dbl>
 
 ``` r
 glimpse(data)
@@ -77,14 +77,14 @@ glimpse(data)
 
     ## Observations: 201
     ## Variables: 8
-    ## $ eq5d_vas              (int) 80, 50, 70, 30, 60, 80, 70, 20, 60, 0, 1...
-    ## $ age                   (int) 44, 46, 67, 47, 61, 48, 44, 48, 32, 40, ...
-    ## $ painful_sn            (chr) "yes", "yes", "yes", "yes", "yes", "yes"...
-    ## $ other_pain_sites      (chr) "yes", "yes", "yes", "yes", "yes", "yes"...
-    ## $ sex                   (chr) "female", "male", "female", "female", "m...
-    ## $ education             (int) 5, 6, 4, 6, 5, 6, 5, 6, 6, 5, 0, 3, 5, 4...
-    ## $ hscl_anxiety_score    (dbl) 1.5, 2.9, 3.5, 3.6, 1.9, 1.1, 1.8, 2.4, ...
-    ## $ hscl_depression_score (dbl) 3.27, 2.87, 2.60, 3.13, 2.33, 1.67, 2.87...
+    ## $ eq5d_vas              <int> 80, 50, 70, 30, 60, 80, 70, 20, 60, 0, 1...
+    ## $ age                   <int> 44, 46, 67, 47, 61, 48, 44, 48, 32, 40, ...
+    ## $ painful_sn            <chr> "yes", "yes", "yes", "yes", "yes", "yes"...
+    ## $ other_pain_sites      <chr> "yes", "yes", "yes", "yes", "yes", "yes"...
+    ## $ sex                   <chr> "female", "male", "female", "female", "m...
+    ## $ education             <int> 5, 6, 4, 6, 5, 6, 5, 6, 6, 5, 0, 3, 5, 4...
+    ## $ hscl_anxiety_score    <dbl> 1.5, 2.9, 3.5, 3.6, 1.9, 1.1, 1.8, 2.4, ...
+    ## $ hscl_depression_score <dbl> 3.27, 2.87, 2.60, 3.13, 2.33, 1.67, 2.87...
 
 ``` r
 summary(data)
@@ -165,16 +165,16 @@ mod.gam <- gamlss(eq5d_vas ~
 summary(mod.gam)
 ```
 
-    ## *******************************************************************
+    ## ******************************************************************
     ## Family:  c("BEINF", "Beta Inflated") 
     ## 
-    ## Call:  gamlss(formula = eq5d_vas ~ painful_sn + other_pain_sites + age +  
-    ##     sex + hscl_depression_score + hscl_anxiety_score + education,  
-    ##     family = BEINF(), data = data.gam) 
+    ## Call:  gamlss(formula = eq5d_vas ~ painful_sn + other_pain_sites +  
+    ##     age + sex + hscl_depression_score + hscl_anxiety_score +  
+    ##     education, family = BEINF(), data = data.gam) 
     ## 
     ## Fitting method: RS() 
     ## 
-    ## -------------------------------------------------------------------
+    ## ------------------------------------------------------------------
     ## Mu link function:  logit
     ## Mu Coefficients:
     ##                        Estimate Std. Error t value Pr(>|t|)   
@@ -189,7 +189,7 @@ summary(mod.gam)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## -------------------------------------------------------------------
+    ## ------------------------------------------------------------------
     ## Sigma link function:  logit
     ## Sigma Coefficients:
     ##             Estimate Std. Error t value Pr(>|t|)    
@@ -197,7 +197,7 @@ summary(mod.gam)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## -------------------------------------------------------------------
+    ## ------------------------------------------------------------------
     ## Nu link function:  log 
     ## Nu Coefficients:
     ##             Estimate Std. Error t value Pr(>|t|)    
@@ -205,7 +205,7 @@ summary(mod.gam)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## -------------------------------------------------------------------
+    ## ------------------------------------------------------------------
     ## Tau link function:  log 
     ## Tau Coefficients:
     ##             Estimate Std. Error t value Pr(>|t|)    
@@ -213,7 +213,7 @@ summary(mod.gam)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## -------------------------------------------------------------------
+    ## ------------------------------------------------------------------
     ## No. of observations in the fit:  201 
     ## Degrees of Freedom for the fit:  11
     ##       Residual Deg. of Freedom:  190 
@@ -222,7 +222,7 @@ summary(mod.gam)
     ## Global Deviance:     200.9822 
     ##             AIC:     222.9822 
     ##             SBC:     259.3186 
-    ## *******************************************************************
+    ## ******************************************************************
 
 ``` r
 # Use stepGAIC to select best models based on GAIC
@@ -326,7 +326,7 @@ step.gam$anova
 summary(step.gam)
 ```
 
-    ## *******************************************************************
+    ## ******************************************************************
     ## Family:  c("BEINF", "Beta Inflated") 
     ## 
     ## Call:  gamlss(formula = eq5d_vas ~ painful_sn + hscl_depression_score,  
@@ -334,7 +334,7 @@ summary(step.gam)
     ## 
     ## Fitting method: RS() 
     ## 
-    ## -------------------------------------------------------------------
+    ## ------------------------------------------------------------------
     ## Mu link function:  logit
     ## Mu Coefficients:
     ##                       Estimate Std. Error t value Pr(>|t|)    
@@ -344,7 +344,7 @@ summary(step.gam)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## -------------------------------------------------------------------
+    ## ------------------------------------------------------------------
     ## Sigma link function:  logit
     ## Sigma Coefficients:
     ##             Estimate Std. Error t value Pr(>|t|)    
@@ -352,7 +352,7 @@ summary(step.gam)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## -------------------------------------------------------------------
+    ## ------------------------------------------------------------------
     ## Nu link function:  log 
     ## Nu Coefficients:
     ##             Estimate Std. Error t value Pr(>|t|)    
@@ -360,7 +360,7 @@ summary(step.gam)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## -------------------------------------------------------------------
+    ## ------------------------------------------------------------------
     ## Tau link function:  log 
     ## Tau Coefficients:
     ##             Estimate Std. Error t value Pr(>|t|)    
@@ -368,7 +368,7 @@ summary(step.gam)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## -------------------------------------------------------------------
+    ## ------------------------------------------------------------------
     ## No. of observations in the fit:  201 
     ## Degrees of Freedom for the fit:  6
     ##       Residual Deg. of Freedom:  195 
@@ -377,7 +377,7 @@ summary(step.gam)
     ## Global Deviance:     201.4072 
     ##             AIC:     213.4072 
     ##             SBC:     233.2271 
-    ## *******************************************************************
+    ## ******************************************************************
 
 ``` r
 # OUTCOME: Final model retains hscl_depression_score
@@ -400,16 +400,16 @@ mod.gam.new <- gamlss(eq5d_vas ~
 plot(mod.gam.new)
 ```
 
-![](./figures/qol-pain-no-pain/gam-1.png)<!-- -->
+![](./figures/qol-pain-no-pain/gam-1.png)
 
-    ## *******************************************************************
+    ## ******************************************************************
     ##   Summary of the Randomised Quantile Residuals
     ##                            mean   =  0.02158645 
     ##                        variance   =  1.077762 
     ##                coef. of skewness  =  0.04230354 
     ##                coef. of kurtosis  =  3.142442 
     ## Filliben correlation coefficient  =  0.9978065 
-    ## *******************************************************************
+    ## ******************************************************************
 
 ``` r
 # OUTCOME: No pattern in residual vs fitted plot, 
@@ -423,7 +423,7 @@ ggplot(data.gam,
     geom_smooth()
 ```
 
-![](./figures/qol-pain-no-pain/gam-2.png)<!-- -->
+![](./figures/qol-pain-no-pain/gam-2.png)
 
 ``` r
 ## OUTCOME: As depression score increases, QoL decreases.
@@ -434,7 +434,7 @@ ggplot(data.gam,
     geom_boxplot()
 ```
 
-![](./figures/qol-pain-no-pain/gam-3.png)<!-- -->
+![](./figures/qol-pain-no-pain/gam-3.png)
 
 ``` r
 ## OUTCOME: Presence of painful SN associated with 
@@ -448,9 +448,9 @@ Session information
 sessionInfo()
 ```
 
-    ## R version 3.2.3 (2015-12-10)
+    ## R version 3.3.1 (2016-06-21)
     ## Platform: x86_64-apple-darwin13.4.0 (64-bit)
-    ## Running under: OS X 10.11.3 (El Capitan)
+    ## Running under: OS X 10.12.1 (Sierra)
     ## 
     ## locale:
     ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
@@ -460,15 +460,18 @@ sessionInfo()
     ## [8] methods   base     
     ## 
     ## other attached packages:
-    ##  [1] gdtools_0.0.7     ggplot2_2.1.0     gamlss_4.3-8     
-    ##  [4] nlme_3.1-125      gamlss.dist_4.3-5 MASS_7.3-45      
-    ##  [7] gamlss.data_4.3-2 tidyr_0.4.1       dplyr_0.4.3      
-    ## [10] readr_0.2.2       svglite_1.1.0     knitr_1.12.3     
+    ##  [1] gdtools_0.1.3     ggplot2_2.2.0     gamlss_5.0-0     
+    ##  [4] nlme_3.1-128      gamlss.dist_5.0-0 MASS_7.3-45      
+    ##  [7] gamlss.data_5.0-0 tidyr_0.6.0       dplyr_0.5.0      
+    ## [10] readr_1.0.0       svglite_1.2.0     knitr_1.15       
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] Rcpp_0.12.3      magrittr_1.5     munsell_0.4.3    colorspace_1.2-6
-    ##  [5] lattice_0.20-33  R6_2.1.2         plyr_1.8.3       stringr_1.0.0   
-    ##  [9] tools_3.2.3      grid_3.2.3       gtable_0.2.0     DBI_0.3.1       
-    ## [13] htmltools_0.3    lazyeval_0.1.10  yaml_2.1.13      survival_2.38-3 
-    ## [17] assertthat_0.1   digest_0.6.9     formatR_1.2.1    evaluate_0.8    
-    ## [21] rmarkdown_0.9.5  labeling_0.3     stringi_1.0-1    scales_0.4.0
+    ##  [1] Rcpp_0.12.8        magrittr_1.5       munsell_0.4.3     
+    ##  [4] colorspace_1.3-0   lattice_0.20-34    R6_2.2.0          
+    ##  [7] plyr_1.8.4         stringr_1.1.0      tools_3.3.1       
+    ## [10] grid_3.3.1         gtable_0.2.0       DBI_0.5-1         
+    ## [13] htmltools_0.3.5    lazyeval_0.2.0     survival_2.40-1   
+    ## [16] yaml_2.1.14        assertthat_0.1     rprojroot_1.1     
+    ## [19] digest_0.6.10      tibble_1.2         Matrix_1.2-7.1    
+    ## [22] evaluate_0.10      rmarkdown_1.1.9017 labeling_0.3      
+    ## [25] stringi_1.1.2      scales_0.4.1       backports_1.0.4

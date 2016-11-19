@@ -6,7 +6,7 @@ Factors associated with having pain in patients with HIV-SN
 
 Peter Kamerman, Antonia Wadley, Prinisha Pillay
 
-**Date: March 10, 2016**
+**Date: November 19, 2016**
 
 ------------------------------------------------------------------------
 
@@ -41,33 +41,31 @@ names(data.lr)
 head(data.lr)
 ```
 
-    ## Source: local data frame [6 x 9]
-    ## 
+    ## # A tibble: 6 × 9
     ##   painful_sn height  mass   age time_since_diag vitB12 other_pain_sites
-    ##        (chr)  (dbl) (dbl) (int)           (int)  (chr)            (chr)
+    ##        <chr>  <dbl> <dbl> <int>           <int>  <chr>            <chr>
     ## 1        yes  144.5  52.6    44              48     no              yes
     ## 2        yes  158.2  70.2    46             108     no              yes
     ## 3        yes  156.0  55.1    67              96     no              yes
     ## 4        yes  156.3  86.0    47             108     no              yes
     ## 5        yes  161.5  87.1    61             120     no              yes
     ## 6        yes  152.0  60.8    48              72     no              yes
-    ## Variables not shown: current_cd4 (int), sex (chr)
+    ## # ... with 2 more variables: current_cd4 <int>, sex <chr>
 
 ``` r
 tail(data.lr)
 ```
 
-    ## Source: local data frame [6 x 9]
-    ## 
+    ## # A tibble: 6 × 9
     ##   painful_sn height  mass   age time_since_diag vitB12 other_pain_sites
-    ##        (chr)  (dbl) (dbl) (int)           (int)  (chr)            (chr)
+    ##        <chr>  <dbl> <dbl> <int>           <int>  <chr>            <chr>
     ## 1         no  172.4  88.5    56              NA     no              yes
     ## 2         no     NA  69.8    37              NA     no               no
     ## 3         no     NA 110.0    45              NA     no               no
     ## 4         no     NA 104.9    40              NA     no               no
     ## 5         no     NA  58.5    55              NA     no               no
     ## 6         no     NA  62.9    34              NA     no               no
-    ## Variables not shown: current_cd4 (int), sex (chr)
+    ## # ... with 2 more variables: current_cd4 <int>, sex <chr>
 
 ``` r
 glimpse(data.lr)
@@ -75,15 +73,15 @@ glimpse(data.lr)
 
     ## Observations: 201
     ## Variables: 9
-    ## $ painful_sn       (chr) "yes", "yes", "yes", "yes", "yes", "yes", "ye...
-    ## $ height           (dbl) 144.5, 158.2, 156.0, 156.3, 161.5, 152.0, 161...
-    ## $ mass             (dbl) 52.6, 70.2, 55.1, 86.0, 87.1, 60.8, 78.0, 60....
-    ## $ age              (int) 44, 46, 67, 47, 61, 48, 44, 48, 32, 40, 58, 4...
-    ## $ time_since_diag  (int) 48, 108, 96, 108, 120, 72, 108, 108, 48, 96, ...
-    ## $ vitB12           (chr) "no", "no", "no", "no", "no", "no", "no", "no...
-    ## $ other_pain_sites (chr) "yes", "yes", "yes", "yes", "yes", "yes", "ye...
-    ## $ current_cd4      (int) 343, 572, 826, 980, 206, 311, 742, 495, 231, ...
-    ## $ sex              (chr) "female", "male", "female", "female", "male",...
+    ## $ painful_sn       <chr> "yes", "yes", "yes", "yes", "yes", "yes", "ye...
+    ## $ height           <dbl> 144.5, 158.2, 156.0, 156.3, 161.5, 152.0, 161...
+    ## $ mass             <dbl> 52.6, 70.2, 55.1, 86.0, 87.1, 60.8, 78.0, 60....
+    ## $ age              <int> 44, 46, 67, 47, 61, 48, 44, 48, 32, 40, 58, 4...
+    ## $ time_since_diag  <int> 48, 108, 96, 108, 120, 72, 108, 108, 48, 96, ...
+    ## $ vitB12           <chr> "no", "no", "no", "no", "no", "no", "no", "no...
+    ## $ other_pain_sites <chr> "yes", "yes", "yes", "yes", "yes", "yes", "ye...
+    ## $ current_cd4      <int> 343, 572, 826, 980, 206, 311, 742, 495, 231, ...
+    ## $ sex              <chr> "female", "male", "female", "female", "male",...
 
 ``` r
 summary(data.lr)
@@ -290,7 +288,7 @@ get.mod.lr
     ## attr(,"rank")
     ## function (x) 
     ## do.call("rank", list(x))
-    ## <environment: 0x7f84e18d9aa0>
+    ## <environment: 0x7fa9fb119268>
     ## attr(,"rank")attr(,"call")
     ## AIC(x)
     ## attr(,"rank")attr(,"class")
@@ -383,23 +381,24 @@ mod.lr.new<-lrm(painful_sn ~
 mod.lr.new
 ```
 
-    ## 
     ## Logistic Regression Model
+    ##  
+    ##  lrm(formula = painful_sn ~ other_pain_sites + time_since_diag, 
+    ##      data = data.lr, x = TRUE, y = TRUE, linear.predictors = TRUE)
+    ##  
+    ##                      Model Likelihood     Discrimination    Rank Discrim.    
+    ##                         Ratio Test           Indexes           Indexes       
+    ##  Obs         160    LR chi2     127.66    R2       0.759    C       0.933    
+    ##   no          55    d.f.             2    g        5.619    Dxy     0.867    
+    ##   yes        105    Pr(> chi2) <0.0001    gr     275.684    gamma   0.877    
+    ##  max |deriv| 0.1                          gp       0.398    tau-a   0.393    
+    ##                                           Brier    0.071                     
+    ##  
+    ##                       Coef    S.E.    Wald Z Pr(>|Z|)
+    ##  Intercept            -8.3787 27.8255 -0.30  0.7633  
+    ##  other_pain_sites=yes 12.5941 27.8258  0.45  0.6508  
+    ##  time_since_diag      -0.0167  0.0045 -3.68  0.0002  
     ## 
-    ## lrm(formula = painful_sn ~ other_pain_sites + time_since_diag, 
-    ##     data = data.lr, x = TRUE, y = TRUE, linear.predictors = TRUE)
-    ##                     Model Likelihood     Discrimination    Rank Discrim.    
-    ##                        Ratio Test            Indexes          Indexes       
-    ## Obs         160    LR chi2     127.66    R2       0.759    C       0.933    
-    ##  no          55    d.f.             2    g        5.619    Dxy     0.867    
-    ##  yes        105    Pr(> chi2) <0.0001    gr     275.684    gamma   0.877    
-    ## max |deriv| 0.1                          gp       0.398    tau-a   0.393    
-    ##                                          Brier    0.071                     
-    ## 
-    ##                      Coef    S.E.    Wald Z Pr(>|Z|)
-    ## Intercept            -8.3787 27.8255 -0.30  0.7633  
-    ## other_pain_sites=yes 12.5941 27.8258  0.45  0.6508  
-    ## time_since_diag      -0.0167  0.0045 -3.68  0.0002
 
 ``` r
 summary(mod.lr.new)
@@ -425,7 +424,7 @@ plot(Predict(mod.lr.new),
      pval = TRUE)
 ```
 
-![](./figures/pain-vs-no-pain/logistic-1.png)<!-- -->
+![](./figures/pain-vs-no-pain/logistic-1.png)
 
 ``` r
 # OUTCOME: Model is significantly better than null model (p < 0.0001), 
@@ -474,9 +473,9 @@ Session information
 sessionInfo()
 ```
 
-    ## R version 3.2.3 (2015-12-10)
+    ## R version 3.3.1 (2016-06-21)
     ## Platform: x86_64-apple-darwin13.4.0 (64-bit)
-    ## Running under: OS X 10.11.3 (El Capitan)
+    ## Running under: OS X 10.12.1 (Sierra)
     ## 
     ## locale:
     ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
@@ -485,24 +484,25 @@ sessionInfo()
     ## [1] stats     graphics  grDevices utils     datasets  methods   base     
     ## 
     ## other attached packages:
-    ##  [1] gdtools_0.0.7   rms_4.4-2       SparseM_1.7     Hmisc_3.17-2   
-    ##  [5] ggplot2_2.1.0   Formula_1.2-1   survival_2.38-3 lattice_0.20-33
-    ##  [9] MuMIn_1.15.6    MASS_7.3-45     tidyr_0.4.1     dplyr_0.4.3    
-    ## [13] readr_0.2.2     svglite_1.1.0   knitr_1.12.3   
+    ##  [1] gdtools_0.1.3   rms_5.0-0       SparseM_1.74    Hmisc_4.0-0    
+    ##  [5] ggplot2_2.2.0   Formula_1.2-1   survival_2.40-1 lattice_0.20-34
+    ##  [9] MuMIn_1.15.6    MASS_7.3-45     tidyr_0.6.0     dplyr_0.5.0    
+    ## [13] readr_1.0.0     svglite_1.2.0   knitr_1.15     
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] Rcpp_0.12.3         formatR_1.2.1       RColorBrewer_1.1-2 
-    ##  [4] plyr_1.8.3          tools_3.2.3         rpart_4.1-10       
-    ##  [7] digest_0.6.9        polspline_1.1.12    nlme_3.1-125       
-    ## [10] evaluate_0.8        gtable_0.2.0        Matrix_1.2-3       
-    ## [13] DBI_0.3.1           yaml_2.1.13         parallel_3.2.3     
-    ## [16] mvtnorm_1.0-5       gridExtra_2.2.1     stringr_1.0.0      
-    ## [19] cluster_2.0.3       MatrixModels_0.4-1  nnet_7.3-12        
-    ## [22] stats4_3.2.3        grid_3.2.3          R6_2.1.2           
-    ## [25] foreign_0.8-66      rmarkdown_0.9.5     multcomp_1.4-4     
-    ## [28] TH.data_1.0-7       latticeExtra_0.6-28 magrittr_1.5       
-    ## [31] codetools_0.2-14    scales_0.4.0        htmltools_0.3      
-    ## [34] splines_3.2.3       assertthat_0.1      colorspace_1.2-6   
-    ## [37] quantreg_5.21       sandwich_2.3-4      stringi_1.0-1      
-    ## [40] acepack_1.3-3.3     lazyeval_0.1.10     munsell_0.4.3      
-    ## [43] zoo_1.7-12
+    ##  [1] zoo_1.7-13          splines_3.3.1       colorspace_1.3-0   
+    ##  [4] htmltools_0.3.5     stats4_3.3.1        yaml_2.1.14        
+    ##  [7] chron_2.3-47        foreign_0.8-67      DBI_0.5-1          
+    ## [10] RColorBrewer_1.1-2  multcomp_1.4-6      plyr_1.8.4         
+    ## [13] stringr_1.1.0       MatrixModels_0.4-1  munsell_0.4.3      
+    ## [16] gtable_0.2.0        mvtnorm_1.0-5       codetools_0.2-15   
+    ## [19] evaluate_0.10       latticeExtra_0.6-28 quantreg_5.29      
+    ## [22] htmlTable_1.7       TH.data_1.0-7       Rcpp_0.12.8        
+    ## [25] acepack_1.4.1       scales_0.4.1        backports_1.0.4    
+    ## [28] gridExtra_2.2.1     digest_0.6.10       stringi_1.1.2      
+    ## [31] polspline_1.1.12    grid_3.3.1          rprojroot_1.1      
+    ## [34] tools_3.3.1         sandwich_2.3-4      magrittr_1.5       
+    ## [37] lazyeval_0.2.0      tibble_1.2          cluster_2.0.5      
+    ## [40] Matrix_1.2-7.1      data.table_1.9.6    assertthat_0.1     
+    ## [43] rmarkdown_1.1.9017  R6_2.2.0            rpart_4.1-10       
+    ## [46] nnet_7.3-12         nlme_3.1-128

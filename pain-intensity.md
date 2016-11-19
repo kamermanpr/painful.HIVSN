@@ -6,7 +6,7 @@ Factors associated with having greater pain in patients with painful HIV-SN
 
 Peter Kamerman, Antonia Wadley, Prinisha Pillay
 
-**Date: March 04, 2016**
+**Date: November 19, 2016**
 
 ------------------------------------------------------------------------
 
@@ -40,33 +40,31 @@ names(data)
 head(data)
 ```
 
-    ## Source: local data frame [6 x 6]
-    ## 
+    ## # A tibble: 6 × 6
     ##   pain_intensity pain_sites hscl_depression_score hscl_anxiety_score   pcs
-    ##            (int)      (int)                 (dbl)              (dbl) (dbl)
+    ##            <int>      <int>                 <dbl>              <dbl> <dbl>
     ## 1             10          3                  3.27                1.5  2.77
     ## 2             10          8                  2.87                2.9  0.77
     ## 3             10          5                  2.60                3.5  4.00
     ## 4             10          4                  3.13                3.6  3.38
     ## 5             10          7                  2.33                1.9  0.92
     ## 6              5          3                  1.67                1.1  1.38
-    ## Variables not shown: tb (chr)
+    ## # ... with 1 more variables: tb <chr>
 
 ``` r
 tail(data)
 ```
 
-    ## Source: local data frame [6 x 6]
-    ## 
+    ## # A tibble: 6 × 6
     ##   pain_intensity pain_sites hscl_depression_score hscl_anxiety_score   pcs
-    ##            (int)      (int)                 (dbl)              (dbl) (dbl)
+    ##            <int>      <int>                 <dbl>              <dbl> <dbl>
     ## 1             10          5                  2.73                3.1  3.69
     ## 2             10          3                  2.87                2.3  3.54
     ## 3              5          9                  2.00                1.7  1.77
     ## 4             10          8                  2.60                3.3  3.23
     ## 5              8          5                  3.20                2.6  1.85
     ## 6             10          4                  3.00                3.6  3.38
-    ## Variables not shown: tb (chr)
+    ## # ... with 1 more variables: tb <chr>
 
 ``` r
 glimpse(data)
@@ -74,12 +72,12 @@ glimpse(data)
 
     ## Observations: 129
     ## Variables: 6
-    ## $ pain_intensity        (int) 10, 10, 10, 10, 10, 5, 7, 10, 5, 5, 10, ...
-    ## $ pain_sites            (int) 3, 8, 5, 4, 7, 3, 7, 6, 7, 1, 3, 2, 9, 3...
-    ## $ hscl_depression_score (dbl) 3.27, 2.87, 2.60, 3.13, 2.33, 1.67, 2.87...
-    ## $ hscl_anxiety_score    (dbl) 1.5, 2.9, 3.5, 3.6, 1.9, 1.1, 1.8, 2.4, ...
-    ## $ pcs                   (dbl) 2.77, 0.77, 4.00, 3.38, 0.92, 1.38, 2.85...
-    ## $ tb                    (chr) "no", "no", "no", "yes", "no", "no", "ye...
+    ## $ pain_intensity        <int> 10, 10, 10, 10, 10, 5, 7, 10, 5, 5, 10, ...
+    ## $ pain_sites            <int> 3, 8, 5, 4, 7, 3, 7, 6, 7, 1, 3, 2, 9, 3...
+    ## $ hscl_depression_score <dbl> 3.27, 2.87, 2.60, 3.13, 2.33, 1.67, 2.87...
+    ## $ hscl_anxiety_score    <dbl> 1.5, 2.9, 3.5, 3.6, 1.9, 1.1, 1.8, 2.4, ...
+    ## $ pcs                   <dbl> 2.77, 0.77, 4.00, 3.38, 0.92, 1.38, 2.85...
+    ## $ tb                    <chr> "no", "no", "no", "yes", "no", "no", "ye...
 
 ``` r
 summary(data)
@@ -272,7 +270,7 @@ get.mod.olr
     ## attr(,"rank")
     ## function (x) 
     ## do.call("rank", list(x))
-    ## <environment: 0x7fb4c0ed6000>
+    ## <environment: 0x7fe76b301b40>
     ## attr(,"rank")attr(,"call")
     ## AIC(x)
     ## attr(,"rank")attr(,"class")
@@ -380,37 +378,48 @@ mod.olr.new<-lrm(pain_intensity ~ hscl_depression_score +
 mod.olr.new
 ```
 
-    ## 
-    ## Logistic Regression Model
-    ## 
-    ## lrm(formula = pain_intensity ~ hscl_depression_score + pain_sites + 
-    ##     tb, data = data.olr, x = TRUE, y = TRUE, linear.predictors = TRUE)
-    ## Frequencies of Responses
-    ## 
     ##  1  2  3  4  5  6  7  8  9 10 
     ##  2  9  9  6 25  8  6 11  3 50 
+    ## Logistic Regression Model
+    ##  
+    ##  lrm(formula = pain_intensity ~ hscl_depression_score + pain_sites + 
+    ##      tb, data = data.olr, x = TRUE, y = TRUE, linear.predictors = TRUE)
+    ##  
+    ##  Frequencies of Responses
+    ##  
+    ##  2
+    ##  9
+    ##  9
+    ##  6
+    ##  25
+    ##  8
+    ##  6
+    ##  11
+    ##  3
+    ##  50
+    ##  
+    ##                       Model Likelihood     Discrimination    Rank Discrim.    
+    ##                          Ratio Test           Indexes           Indexes       
+    ##  Obs           129    LR chi2     12.25    R2       0.093    C       0.627    
+    ##  max |deriv| 6e-12    d.f.            3    g        0.663    Dxy     0.254    
+    ##                       Pr(> chi2) 0.0066    gr       1.941    gamma   0.256    
+    ##                                            gp       0.150    tau-a   0.201    
+    ##                                            Brier    0.222                     
+    ##  
+    ##                        Coef    S.E.   Wald Z Pr(>|Z|)
+    ##  y>=2                   2.4794 0.9675  2.56  0.0104  
+    ##  y>=3                   0.6967 0.7259  0.96  0.3372  
+    ##  y>=4                  -0.0106 0.7023 -0.02  0.9880  
+    ##  y>=5                  -0.3577 0.7004 -0.51  0.6096  
+    ##  y>=6                  -1.3944 0.7110 -1.96  0.0498  
+    ##  y>=7                  -1.6739 0.7178 -2.33  0.0197  
+    ##  y>=8                  -1.8838 0.7249 -2.60  0.0094  
+    ##  y>=9                  -2.2670 0.7376 -3.07  0.0021  
+    ##  y>=10                 -2.3710 0.7403 -3.20  0.0014  
+    ##  hscl_depression_score  0.5256 0.2389  2.20  0.0278  
+    ##  pain_sites             0.1780 0.0852  2.09  0.0367  
+    ##  tb=yes                -0.9941 0.4933 -2.02  0.0439  
     ## 
-    ##                      Model Likelihood     Discrimination    Rank Discrim.    
-    ##                         Ratio Test            Indexes          Indexes       
-    ## Obs           129    LR chi2     12.25    R2       0.093    C       0.627    
-    ## max |deriv| 6e-12    d.f.            3    g        0.663    Dxy     0.254    
-    ##                      Pr(> chi2) 0.0066    gr       1.941    gamma   0.256    
-    ##                                           gp       0.150    tau-a   0.201    
-    ##                                           Brier    0.222                     
-    ## 
-    ##                       Coef    S.E.   Wald Z Pr(>|Z|)
-    ## y>=2                   2.4794 0.9675  2.56  0.0104  
-    ## y>=3                   0.6967 0.7259  0.96  0.3372  
-    ## y>=4                  -0.0106 0.7023 -0.02  0.9880  
-    ## y>=5                  -0.3577 0.7004 -0.51  0.6096  
-    ## y>=6                  -1.3944 0.7110 -1.96  0.0498  
-    ## y>=7                  -1.6739 0.7178 -2.33  0.0197  
-    ## y>=8                  -1.8838 0.7249 -2.60  0.0094  
-    ## y>=9                  -2.2670 0.7376 -3.07  0.0021  
-    ## y>=10                 -2.3710 0.7403 -3.20  0.0014  
-    ## hscl_depression_score  0.5256 0.2389  2.20  0.0278  
-    ## pain_sites             0.1780 0.0852  2.09  0.0367  
-    ## tb=yes                -0.9941 0.4933 -2.02  0.0439
 
 ``` r
 summary(mod.olr.new)
@@ -440,7 +449,7 @@ plot(Predict(mod.olr.new),
      pval = TRUE)
 ```
 
-![](./figures/pain-intensity/ordinal_logistic-1.png)<!-- -->
+![](./figures/pain-intensity/ordinal_logistic-1.png)
 
 ``` r
 # OUTCOME: Model is significantly better than null model (p = 0.007), 
@@ -492,9 +501,9 @@ Session information
 sessionInfo()
 ```
 
-    ## R version 3.2.3 (2015-12-10)
+    ## R version 3.3.1 (2016-06-21)
     ## Platform: x86_64-apple-darwin13.4.0 (64-bit)
-    ## Running under: OS X 10.11.3 (El Capitan)
+    ## Running under: OS X 10.12.1 (Sierra)
     ## 
     ## locale:
     ## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
@@ -503,24 +512,25 @@ sessionInfo()
     ## [1] stats     graphics  grDevices utils     datasets  methods   base     
     ## 
     ## other attached packages:
-    ##  [1] gdtools_0.0.7   rms_4.4-2       SparseM_1.7     Hmisc_3.17-2   
-    ##  [5] ggplot2_2.1.0   Formula_1.2-1   survival_2.38-3 lattice_0.20-33
-    ##  [9] MuMIn_1.15.6    MASS_7.3-45     tidyr_0.4.1     dplyr_0.4.3    
-    ## [13] readr_0.2.2     svglite_1.1.0   knitr_1.12.3   
+    ##  [1] gdtools_0.1.3   rms_5.0-0       SparseM_1.74    Hmisc_4.0-0    
+    ##  [5] ggplot2_2.2.0   Formula_1.2-1   survival_2.40-1 lattice_0.20-34
+    ##  [9] MuMIn_1.15.6    MASS_7.3-45     tidyr_0.6.0     dplyr_0.5.0    
+    ## [13] readr_1.0.0     svglite_1.2.0   knitr_1.15     
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] Rcpp_0.12.3         formatR_1.2.1       RColorBrewer_1.1-2 
-    ##  [4] plyr_1.8.3          tools_3.2.3         rpart_4.1-10       
-    ##  [7] digest_0.6.9        polspline_1.1.12    nlme_3.1-125       
-    ## [10] evaluate_0.8        gtable_0.2.0        Matrix_1.2-3       
-    ## [13] DBI_0.3.1           yaml_2.1.13         parallel_3.2.3     
-    ## [16] mvtnorm_1.0-5       gridExtra_2.2.1     stringr_1.0.0      
-    ## [19] cluster_2.0.3       MatrixModels_0.4-1  nnet_7.3-12        
-    ## [22] stats4_3.2.3        grid_3.2.3          R6_2.1.2           
-    ## [25] foreign_0.8-66      rmarkdown_0.9.5     multcomp_1.4-4     
-    ## [28] TH.data_1.0-7       latticeExtra_0.6-28 magrittr_1.5       
-    ## [31] codetools_0.2-14    scales_0.4.0        htmltools_0.3      
-    ## [34] splines_3.2.3       assertthat_0.1      colorspace_1.2-6   
-    ## [37] quantreg_5.21       sandwich_2.3-4      stringi_1.0-1      
-    ## [40] acepack_1.3-3.3     lazyeval_0.1.10     munsell_0.4.3      
-    ## [43] zoo_1.7-12
+    ##  [1] zoo_1.7-13          splines_3.3.1       colorspace_1.3-0   
+    ##  [4] htmltools_0.3.5     stats4_3.3.1        yaml_2.1.14        
+    ##  [7] chron_2.3-47        foreign_0.8-67      DBI_0.5-1          
+    ## [10] RColorBrewer_1.1-2  multcomp_1.4-6      plyr_1.8.4         
+    ## [13] stringr_1.1.0       MatrixModels_0.4-1  munsell_0.4.3      
+    ## [16] gtable_0.2.0        mvtnorm_1.0-5       codetools_0.2-15   
+    ## [19] evaluate_0.10       latticeExtra_0.6-28 quantreg_5.29      
+    ## [22] htmlTable_1.7       TH.data_1.0-7       Rcpp_0.12.8        
+    ## [25] acepack_1.4.1       scales_0.4.1        backports_1.0.4    
+    ## [28] gridExtra_2.2.1     digest_0.6.10       stringi_1.1.2      
+    ## [31] polspline_1.1.12    grid_3.3.1          rprojroot_1.1      
+    ## [34] tools_3.3.1         sandwich_2.3-4      magrittr_1.5       
+    ## [37] lazyeval_0.2.0      tibble_1.2          cluster_2.0.5      
+    ## [40] Matrix_1.2-7.1      data.table_1.9.6    assertthat_0.1     
+    ## [43] rmarkdown_1.1.9017  R6_2.2.0            rpart_4.1-10       
+    ## [46] nnet_7.3-12         nlme_3.1-128
