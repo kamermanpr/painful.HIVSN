@@ -25,15 +25,10 @@ library(MuMIn) # Model subset selection
     options(na.action = na.fail) # Setting for MuMIn (requires complete dataset)
 library(rms) # Same as MASS::polr, but better model fit indicators
 
-# set seed
-set.seed(1234)
-
 # knitr chunk options
 opts_chunk$set(echo = TRUE,
                warning = FALSE,
                message = FALSE,
-               cache = FALSE,
-               cache.extra = rand_seed,
                fig.path = './figures/2SignsOnly_pain-intensity/',
                fig.width = 10,
                fig.height = 10,
@@ -62,6 +57,9 @@ data.olr <- data %>%
     mutate(pain_intensity = factor(pain_intensity, ordered = TRUE), # Convert 'pain_intensity' to an ordered factor
            tb = factor(tb)) %>% # Convert 'tb' to a factor
     filter(complete.cases(.)) # Retain complete cases only
+
+# Check dimensions
+dim(data.olr)
 ```
 
 ## Build model
@@ -100,8 +98,7 @@ get.mod.olr
 mod.avg.olr <- model.avg(get.mod.olr)
 summary(mod.avg.olr)
 # Made a priori choice to only take variables that occur in >50% of models
-# OUTCOME: hscl_depression_score and pain_sites occur in all 5 models
-# OUTCOME: Current treatment for tb found in 3/5 models
+# OUTCOME: 'hscl_depression_score', 'pain_sites', and 'tb'occur in all 3 models
 # OUTCOME: Take 'hscl_depression_score, pain_sites, tb through to 
 # next stage of analysis
 
@@ -147,6 +144,7 @@ validate(mod.olr.new,
 # Test for multicolinearity using variance inflation factor (vif)
 vif(mod.olr.new) # >4 is a problem
 # OUTCOME: No evidence of multicolinearity between predictors
+
 ```
 
 ## Session information
