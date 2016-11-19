@@ -25,15 +25,10 @@ library(MuMIn) # Model subset selection
     options(na.action = na.fail) # Setting for MuMIn (requires complete dataset)
 library(rms) # Same as MASS::polr, but better model fit indicators
 
-# set seed
-set.seed(1234)
-
 # knitr chunk options
 opts_chunk$set(echo = TRUE,
                warning = FALSE,
                message = FALSE,
-               cache = FALSE,
-               cache.extra = rand_seed,
                fig.path = './figures/2SignsOnly_pain-vs-no-pain/',
                fig.width = 10,
                fig.height = 10,
@@ -107,8 +102,9 @@ get.mod.lr
 mod.avg.lr <- model.avg(get.mod.lr)
 summary(mod.avg.lr)
 # Made a priori choice to only take variables that occur in >50% of models
-# OUTCOME: 'time_since_diag' and 'other_pain_sites' occur in all 6 models
-# OUTCOME: 'time_since_diag' and 'other_pain_sites' through to 
+# OUTCOME: 'time_since_diag' and 'other_pain_sites' occur in all 8 models
+# OUTCOME: 'mass' occurs in 5/8 models
+# OUTCOME: 'time_since_diag', 'other_pain_sites' and 'mass' through to 
 # next stage of analysis.
 
 # New model
@@ -116,12 +112,14 @@ summary(mod.avg.lr)
 ## indicators than MASS::polr
 attach(data.lr)
 d <- datadist(other_pain_sites, 
-              time_since_diag)
+              time_since_diag, 
+              mass)
 detach(data.lr)
 options(datadist = "d")
 mod.lr.new<-lrm(painful_sn ~
                     other_pain_sites + 
-                    time_since_diag, 
+                    time_since_diag +
+                    mass, 
               data = data.lr, 
               x = TRUE, y = TRUE, 
               linear.predictors = TRUE)
@@ -143,12 +141,13 @@ plot(Predict(mod.lr.new),
 validate(mod.lr.new, 
          method = "boot", 
          B=999, 
-         group = data.lr$pain_intensity)
+         group = data.lr$painful_sn)
 # OUTCOME: see "index.corrected" for bootstrapped measures
 
 # Test for multicolinearity using variance inflation factor (vif)
 vif(mod.lr.new) # >4 is a problem
 # OUTCOME: No evidence of multicolinearity between predictors
+
 ```
 
 ## Session information
