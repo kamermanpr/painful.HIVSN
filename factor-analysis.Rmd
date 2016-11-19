@@ -1,0 +1,167 @@
+---
+title: "Factor analysis of Hopkins Symptom Checklist 25 (English) in HIV-infected individuals who are not first-language English speakers"
+author: 'Peter Kamerman, Prinisha Pillay, Antonia Wadley' 
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output: 
+  md_document:
+    variant: markdown_github
+---
+
+## Load required packages and set chunk options
+```{r miscellaneous.1, include = FALSE}
+# Load libraries
+library(pander)
+library(readr)
+library(knitr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(psych)
+library(GPArotation) # for fa function in 'psych'
+
+# Set seed
+set.seed(123)
+
+# Set knitr chunk options
+opts_chunk$set(echo = TRUE,
+               warning = FALSE,
+               message = FALSE,
+               cache = TRUE,
+               cache.extra = rand_seed,
+               fig.path = './figures/factor-analysis/',
+               dev = c('png', 'pdf'),
+               tidy = FALSE)
+```
+
+### Import data
+```{r import.1}
+# Read csv
+data <- read_csv('./data/factor-analysis.csv')
+```
+
+### Inspect
+```{r inspect.1, include = FALSE}
+# Inspect the data
+head(data)
+tail(data)
+str(data)
+```
+
+### Clean
+```{r clean.1, echo = TRUE}
+# Convert ID to factor
+data_clean <- data %>%
+    select(-pain) %>%
+    mutate(id = factor(id))
+```
+
+### Internal consistency
+_**Use polychoric correlation matrix because data are ordinal integers, and therefore Pearson's correlation matrix does not apply**_
+```{r ic.1}
+# Remove ID column
+data_ic <- data_clean[ , -1]
+
+# Anxiety subset
+anx_ic <- data_ic %>%
+    select(starts_with('anx'))
+## Get a summary of the data
+kable(describe(anx_ic))
+## Generate and view polychoric correlation matrix
+anx_pc <- polychoric(anx_ic)
+## Generate internal consistency coefficient alpha
+anx_alpha <- alpha(anx_pc$rho)
+### Summary stats
+summary(anx_alpha)
+### Drop-one analysis
+#### r.cor = Item whole correlation corrected for 
+#### item overlap and scale reliability.
+#### r.drop = Item whole correlation for this item 
+#### against the scale without this item
+anx_alpha$item.stats
+
+# Depression subset
+dep_ic <- data_ic %>%
+    select(starts_with('dep'))
+## Get a summary of the data
+kable(describe(dep_ic))
+## Generate and view polychoric correlation matrix
+dep_pc <- polychoric(dep_ic)
+## Generate internal consistency coefficient alpha
+dep_alpha <- alpha(dep_pc$rho)
+### Summary stats
+summary(dep_alpha)
+### Drop-one analysis
+#### r.cor = Item whole correlation corrected for 
+#### item overlap and scale reliability.
+#### r.drop = Item whole correlation for this item 
+#### against the scale without this item
+dep_alpha$item.stats
+
+# Total questionnaire
+## Get a summary of the data
+kable(describe(data_ic))
+## Generate and view polychoric correlation matrix
+data_pc <- polychoric(data_ic)
+## Generate internal consistency coefficient alpha
+pander(summary(alpha(data_pc$rho)), 
+       style='rmarkdown', 
+       justify='left', 
+       round = 2, 
+       caption='HSCL25: summary data')
+```
+
+### Factor analysis - initial
+_**Use polychoric correlation matrix because data are ordinal integers, and therefore Pearson's correlation matrix does not apply**_
+```{r fa.1}
+# Print parallel plots to estimate factor solution
+fa.parallel(data_ic,
+            fm='ml',
+            cor='poly')
+
+# Complete factor analysis - use maximum liklihood (ml) method
+## Use nfactor = 4 based on fa.parallel plot
+## Thereafter repeat analysis using 2 factors
+## Test oblique rotation (Oblimin), assuming correlation between factors
+
+### Oblimin: 4 factor
+fa_4 <- fa.poly(data_ic,
+                nfactors = 4,
+                rotate ='oblimin',
+                fm ='ml',
+                cor = 'poly',
+                global = F)
+### Oblimin: 2 factor
+fa_2 <- fa.poly(data_ic,
+                nfactors = 2, 
+                rotate ='oblimin',
+                fm = 'ml',
+                cor = 'poly',
+                global = F)
+
+# Interpret
+## Oblimin: 4 factor (suggested)
+fa.diagram(fa_4,
+           cut = 0,
+           digits = 3)
+
+print(fa_4, 
+      cut = 0,
+      digits = 3)
+
+## Oblimin: 2 factor
+fa.diagram(fa_2, 
+           cut = 0,
+           digits = 3)
+
+print(fa_2,
+      cut = 0,
+      digits = 3)
+```
+## Session information
+```{r SessionInfo}
+sessionInfo()
+```
+
+
+
+
