@@ -22,15 +22,10 @@ library(dplyr)
 library(tidyr)
 library(gamlss)
 
-# set seed
-set.seed(1234)
-
 # knitr chunk options
 opts_chunk$set(echo = TRUE,
                warning = FALSE,
                message = FALSE,
-               cache = FALSE,
-               cache.extra = rand_seed,
                fig.path = './figures/2SignsOnly_qol-pain-intensity/',
                fig.width = 10,
                fig.height = 10,
@@ -55,7 +50,7 @@ summary(data)
 
 ## Process data
 ```{r process_data}
-data <- data[ , -c(3, 4)] # Remove 'painful_sn', and 'other_pain_sites' - 
+data <- data[ , -3] # Remove 'other_pain_sites' - 
 # all participants had painful sn and all had pain at other sites
 data.gam <- data %>%
     mutate(eq5d_vas = eq5d_vas/100, # Convert 'eq5d_vas' to proportion
