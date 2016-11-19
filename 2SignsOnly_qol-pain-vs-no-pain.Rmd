@@ -23,15 +23,10 @@ library(dplyr)
 library(tidyr)
 library(gamlss)
 
-# set seed
-set.seed(1234)
-
 # knitr chunk options
 opts_chunk$set(echo = TRUE,
                warning = FALSE,
                message = FALSE,
-               cache = FALSE,
-               cache.extra = rand_seed,
                fig.path = './figures/2SignsOnly_qol-pain-no-pain/',
                fig.width = 10,
                fig.height = 10,
