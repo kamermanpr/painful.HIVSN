@@ -28,7 +28,8 @@ set.seed(123)
 opts_chunk$set(echo = TRUE,
                warning = FALSE,
                message = FALSE,
-               cache = FALSE,
+               fig.width = 10,
+               fig.height = 10,
                dev = c('png'),
                tidy = FALSE)
 ```
