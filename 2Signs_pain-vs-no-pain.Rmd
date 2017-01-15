@@ -29,7 +29,7 @@ library(rms) # Same as MASS::polr, but better model fit indicators
 opts_chunk$set(echo = TRUE,
                warning = FALSE,
                message = FALSE,
-               fig.path = './figures/2SignsOnly_pain-vs-no-pain/',
+               fig.path = './figures/2Signs_pain-vs-no-pain/',
                fig.width = 10,
                fig.height = 10,
                dev = c('png', 'svglite'),
@@ -38,7 +38,7 @@ opts_chunk$set(echo = TRUE,
 
 ## Load data
 ```{r import_data}
-data.lr <- read_csv('./data/2SignsOnly_pain-vs-no-pain.csv')
+data.lr <- read_csv('./data/2Signs_pain-vs-no-pain.csv')
 ```
 
 ## Quick look
