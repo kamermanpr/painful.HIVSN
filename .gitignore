@@ -3,6 +3,4 @@
 .RData
 .Ruserdata
 *.html
-*.md
 /manuscript
-/factor-analysis_cache
