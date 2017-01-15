@@ -1,7 +1,9 @@
 ---
-output:
-  github_document:
-    html_preview: false
+output: 
+    html_document:
+        toc: true
+        toc_float: true
+        theme: yeti
 ---
 # Two signs of neuropathy data only
 

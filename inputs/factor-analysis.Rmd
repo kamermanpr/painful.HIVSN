@@ -2,9 +2,11 @@
 title: "Factor analysis of Hopkins Symptom Checklist 25 (English) in HIV-infected individuals who are not first-language English speakers"
 author: 'Peter Kamerman, Prinisha Pillay, Antonia Wadley' 
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
-output:
-  github_document:
-    html_preview: false
+output: 
+    html_document:
+        toc: true
+        toc_float: true
+        theme: yeti
 ---
 
 ## Load required packages and set chunk options
@@ -155,6 +157,7 @@ print(fa_2,
       cut = 0,
       digits = 3)
 ```
+
 ## Session information
 ```{r SessionInfo}
 sessionInfo()
