@@ -4,20 +4,21 @@ VPATH = data input_scripts
 # Create dummy targets to ensure all intermediate targets are 'made'
 .PHONY: all
 
-all: pain-vs-no-pain.md pain-intensity.md qol-pain-vs-no-pain.md qol-pain-intensity.md
+all: pain-vs-no-pain.html pain-intensity.html qol-pain-vs-no-pain.html \
+     qol-pain-intensity.html factor-analysis.html
 
-pain-intensity.md: inputs/pain-intensity.Rmd
+pain-intensity.html: inputs/pain-intensity.Rmd
 	Rscript -e "ezknitr::ezknit(file = '$<', out_dir = '.', fig_dir = 'figures/pain-intensity', keep_md = FALSE)"
 
-pain-vs-no-pain.md: inputs/pain-vs-no-pain.Rmd
+pain-vs-no-pain.html: inputs/pain-vs-no-pain.Rmd
 	Rscript -e "ezknitr::ezknit(file = '$<', out_dir = '.', fig_dir = 'figures/pain-vs-no-pain', keep_md = FALSE)"
 
-qol-pain-intensity.md: inputs/qol-pain-intensity.Rmd
+qol-pain-intensity.html: inputs/qol-pain-intensity.Rmd
 	Rscript -e "ezknitr::ezknit(file = '$<', out_dir = '.', fig_dir = 'figures/qol-pain-intensity', keep_md = FALSE)"
 
-qol-pain-vs-no-pain.md: inputs/qol-pain-vs-no-pain.Rmd
+qol-pain-vs-no-pain.html: inputs/qol-pain-vs-no-pain.Rmd
 	Rscript -e "ezknitr::ezknit(file = '$<', out_dir = '.', fig_dir = 'figures/qol-pain-vs-no-pain', keep_md = FALSE)"
 
-factor-analysis.md: inputs/factor-analysis.Rmd
+factor-analysis.html: inputs/factor-analysis.Rmd
 	Rscript -e "ezknitr::ezknit(file = '$<', out_dir = '.', fig_dir = 'figures/factor-analysis', keep_md = FALSE)"
 
