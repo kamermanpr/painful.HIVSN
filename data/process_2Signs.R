@@ -9,7 +9,7 @@
 library(tidyverse)
 
 # Load data
-df_all <- read_csv('./data/2Signs_data_all.csv')
+df_all <- read_csv('data_all.csv')
 
 # Inspect
 dim(df_all)
@@ -41,7 +41,7 @@ df_all %>%
            tb) %>%
     rename(hscl_anxiety_score = hscl_anxiety,
            hscl_depression_score = hscl_depression) %>%
-    write_csv('./data/2Signs_pain-intensity.csv')
+    write_csv('pain-intensity.csv')
 
 ############################################################
 #                                                          #
@@ -70,7 +70,7 @@ df_all %>%
            sex) %>%
     rename(time_since_diag = `time_sinc_ diag`,
            vitB12 = vitb12) %>%
-    write_csv('./data/2Signs_pain-vs-no-pain.csv')
+    write_csv('pain-vs-no-pain.csv')
 
 ############################################################
 #                                                          #
@@ -99,7 +99,7 @@ df_all %>%
     rename(eq5d_vas = `eq-5d_vas`,
            hscl_depression_score = hscl_depression,
            hscl_anxiety_score = hscl_anxiety) %>%
-    write_csv('./data/2Signs_qol-pain-intensity.csv')
+    write_csv('qol-pain-intensity.csv')
 
 ############################################################
 #                                                          #
@@ -128,7 +128,7 @@ df_all %>%
     rename(eq5d_vas = `eq-5d_vas`,
            hscl_depression_score = hscl_depression,
            hscl_anxiety_score = hscl_anxiety) %>%
-    write_csv('./data/2Signs_qol-pain-vs-no-pain.csv')
+    write_csv('qol-pain-vs-no-pain.csv')
 
 # Clear environment
 rm(list = ls())
